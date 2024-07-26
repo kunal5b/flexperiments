@@ -11,8 +11,9 @@ import time
 
 
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
-@hydra.main(config_path="conf", config_name="base", version_base=None)
+@hydra.main(config_path="conf", config_name="RF", version_base=None)
 def main(cfg: DictConfig):
+
     start_time = time.time()
     # 1. Parse config & get experiment output dir
     print(OmegaConf.to_yaml(cfg))
@@ -100,12 +101,12 @@ def main(cfg: DictConfig):
     # (This is one way of saving results, others are of course valid :) )
     # Now that the simulation is completed, we could save the results into the directory
     # that Hydra created automatically at the beginning of the experiment.
-    results_path = str(Path(save_path)) + "/" + getOutputFileName(cfg.model, cfg.attack_round, cfg.max_attack_ratio)
+    results_path = str(Path(save_path)) + "/" + getOutputFileName(cfg.model, cfg.attack_round, cfg.max_attack_ratio, cfg.label_attack_ratio)
 
     # add the history returned by the strategy into a standard Python dictionary
     # you can add more content if you wish (note that in the directory created by
     # Hydra, you'll already have the config used as well as the log)
-    config = {"model": cfg.model, "attack_mode": cfg.attack_round, "attack_ratio": cfg.max_attack_ratio}
+    config = {"model": cfg.model, "attack_mode": cfg.attack_round, "attack_ratio": cfg.max_attack_ratio, "label_attack_ratio": cfg.label_attack_ratio}
     results = {"history": history, "config": config}
 
     # save the results as a python pickle
@@ -115,8 +116,8 @@ def main(cfg: DictConfig):
     end_time = time.time()
     print("Time taken:", end_time - start_time)
 
-def getOutputFileName(model: str, attack_round: str, attack_ratio: float) -> str:
-    return model + "_" + attack_round + "_" + str(int(attack_ratio * 100)) + ".pkl"
+def getOutputFileName(model: str, attack_round: str, attack_ratio: float, label_attack_ratio: float) -> str:
+    return model + "_" + attack_round + "_" + str(int(attack_ratio * 100)) + "_"+ str(int(label_attack_ratio*100))+".pkl"
 
 
 if __name__ == "__main__":

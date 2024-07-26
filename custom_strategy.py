@@ -360,6 +360,7 @@ def get_custom_strategy(model: str, cfg: DictConfig, testdataset: Dataset):
                 on_fit_config_fn=get_on_fit_config(cfg.config_fit, cfg.model),
             # evaluate_metrics_aggregation_fn TODO?
                 max_attack_ratio=cfg.max_attack_ratio,
+                # label_attack_ratio=cfg.label_attack_ratio,
                 attack_round=cfg.attack_round,
                 attack_type=cfg.attack_type,
                 num_rounds=cfg.num_rounds,
